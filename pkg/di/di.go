@@ -45,7 +45,7 @@ func (c *container) Component(target interface{}) {
 	}
 
 	if targetType.Kind() != reflect.Ptr || targetValue.IsNil() {
-		panic("errors: target must be a non-nil pointer")
+		panic(errors.New("target must be a non-nil pointer"))
 	}
 	targetElemType := targetType.Elem()
 	if !reflect.TypeOf(value).AssignableTo(targetElemType) {
@@ -128,12 +128,11 @@ func (c *container) wire() {
 		}
 
 		if wired == 0 {
-
-			for _, d := range rest {
-				fmt.Println(d.constructor.String(), d.dependencies)
+			log.Printf("less!!\n")
+			for index, d := range rest {
+				log.Printf("%d -dependency %v", index, d)
 			}
-
-			panic(errors.New("some components has unmet dependencies"))
+			panic(fmt.Errorf("some components has unmet dependencies: %v", rest))
 		}
 	}
 }
